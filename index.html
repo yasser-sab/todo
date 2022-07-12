@@ -4,44 +4,56 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>todo app</title>
-    <style>
-        .done {
-            text-decoration:line-through;
-        }
-        :root{
-            --bg:red;
-            --f:green;
-        }
-
-        .bg-mode {
-            background-color:var(--bg);
-            color:var(--f)
-        }
-
-        #cbx:checked ~ .bg-mode{
-            --bg:blue;
-            --f:white
-        }
-    </style>
 </head>
 <body>
-    <input type="checkbox" id="cbx">
-    <main class="bg-mode" id="app">
+    <main class="main" id="app">
 
-        <form @submit.prevent="add">
-            <label for="newTodo">add new todo : </label>
-            <input v-model="newTodo" type="text" name="newTodo" id="newTodo">
+        <form class="form" @submit.prevent="add">
+            <div class="container">
+                <header class="form__header flex jc-sb ai-c">
+                    <h1>todo</h1>
+                    <img @click="bg_mode($event)" src="images/icon-sun.svg" alt="">
+                </header>
+                <input v-model="newTodo" type="text" class="form__input p-bt p-rl br-s" name="newTodo" id="newTodo" placeholder="create new todo ...">
+            </div>
             <button type="submit">Add</button>
         </form>
-        <button @click="done">mark all done</button>
-        <ul>
-            <li v-for="todo in todoList">
-                <input type="checkbox" v-model="todo.done">
-                <span :class="{done:todo.done}">{{todo.title}}</span>
-                <button @click="remove(todo)">remove</button>
-            </li>
-        </ul>
+        <!-- <button @click="done">mark all done</button> -->
+        <div style="transform: translateY(-24px);">
+            <div class="container br-s o-h">
+                <ul class="todos">
+                    <li v-for="todo in todoList" class="flex jc-sb ai-c task p-bt p-rl">
+                        <div class="flex ai-c">
+                            <input v-on:change="complete($event)" type="checkbox" v-model="todo.done" class="task__input">
+                            <p :class="{done:todo.done}">{{todo.title}}</p>
+                        </div>
+                        <button @click="remove(todo)" class="task__remove">
+                            <img src="images/icon-cross.svg" alt="icon">
+                        </button>
+                    </li>
+                </ul>
+                <div class="conf flex jc-sb ai-c p-bt p-rl">
+                    <p><span>{{count()}}</span> left</p>
+                    <button @click="clear" type="button">clear complete</button>
+                </div>
+            </div>
+        </div>
+        <footer class="footer container flex jc-c p-bt br-s">
+                <label class="active">
+                    all
+                    <input @change="check('all')" type="radio" name="rad">
+                </label>
+                <label>
+                    active
+                    <input @change="check('active')" type="radio" name="rad">
+                </label>
+                <label>
+                    completed
+                    <input @change="check('completed')" type="radio" name="rad">
+                </label>
+        </footer>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="app.js"></script>
